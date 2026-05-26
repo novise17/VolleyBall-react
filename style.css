@@ -1,59 +1,77 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background: #0f172a;
-  color: white;
+let zones = document.querySelectorAll(".zone");
+let ball = document.getElementById("ball");
+
+let timeDisplay = document.getElementById("time");
+let scoreDisplay = document.getElementById("score");
+let result = document.getElementById("result");
+
+let score = 0;
+let startTime = null;
+let correctZone = null;
+let canClick = false;
+
+function animateBall(zone) {
+  ball.style.display = "block";
+  ball.style.left = "50%";
+  ball.style.top = "-20px";
+
+  let targetX = 0;
+
+  if (zone === "left") targetX = -130;
+  if (zone === "middle") targetX = 0;
+  if (zone === "right") targetX = 130;
+
+  setTimeout(() => {
+    ball.style.transition = "0.25s linear";
+    ball.style.top = "140px";
+    ball.style.left = `calc(50% + ${targetX}px)`;
+  }, 100);
 }
 
-h1 {
-  margin-top: 20px;
+function newRound() {
+  zones.forEach(z => z.classList.remove("active"));
+  result.textContent = "";
+  canClick = false;
+
+  let options = ["left", "middle", "right"];
+  correctZone = options[Math.floor(Math.random() * options.length)];
+
+  animateBall(correctZone);
+
+  setTimeout(() => {
+    zones.forEach(z => {
+      if (z.dataset.zone === correctZone) {
+        z.classList.add("active");
+      }
+    });
+
+    startTime = Date.now();
+    canClick = true;
+  }, 700);
 }
 
-#court {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 50px;
-  height: 200px;
-}
+zones.forEach(zone => {
+  zone.addEventListener("click", () => {
+    if (!canClick) return;
 
-.zone {
-  width: 120px;
-  height: 180px;
-  background: #1f2937;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.2s;
-}
+    let reaction = Date.now() - startTime;
+    timeDisplay.textContent = reaction;
 
-.zone:hover {
-  background: #334155;
-}
+    if (zone.dataset.zone === correctZone) {
+      score++;
+      result.textContent = "✅ Perfect dig!";
+    } else {
+      score = Math.max(0, score - 1);
+      result.textContent = "❌ Missed read!";
+    }
 
-.zone.active {
-  background: limegreen;
-  color: black;
-  font-weight: bold;
-}
+    scoreDisplay.textContent = score;
 
-#ball {
-  width: 20px;
-  height: 20px;
-  background: orange;
-  border-radius: 50%;
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: none;
-}
+    canClick = false;
+    ball.style.display = "none";
 
-#result {
-  margin-top: 20px;
-  font-size: 18px;
-}
+    setTimeout(newRound, 900);
+  });
+});
+
+newRound();
