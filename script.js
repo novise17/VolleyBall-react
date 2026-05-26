@@ -1,32 +1,54 @@
-let box = document.getElementById("box");
+let zones = document.querySelectorAll(".zone");
+let prompt = document.getElementById("prompt");
+let result = document.getElementById("result");
 let timeDisplay = document.getElementById("time");
-let bestDisplay = document.getElementById("best");
+let scoreDisplay = document.getElementById("score");
 
-let startTime;
-let bestTime = null;
+let correctZone = null;
+let startTime = null;
+let score = 0;
 
-function showBox() {
-  let delay = Math.random() * 3000 + 1000;
+function newRound() {
+  zones.forEach(z => z.classList.remove("active"));
+  result.textContent = "";
+
+  let options = ["left", "middle", "right"];
+  correctZone = options[Math.floor(Math.random() * options.length)];
+
+  prompt.textContent = `DIG THE BALL: ${correctZone.toUpperCase()}`;
 
   setTimeout(() => {
-    box.style.display = "block";
-    box.style.background = "lime";
     startTime = Date.now();
-  }, delay);
+
+    zones.forEach(z => {
+      if (z.dataset.zone === correctZone) {
+        z.classList.add("active");
+      }
+    });
+  }, Math.random() * 2000 + 800);
 }
 
-box.onclick = function () {
-  let reactionTime = Date.now() - startTime;
-  box.style.display = "none";
+zones.forEach(zone => {
+  zone.addEventListener("click", () => {
+    if (!startTime) return;
 
-  timeDisplay.textContent = reactionTime;
+    let reaction = Date.now() - startTime;
+    timeDisplay.textContent = reaction;
 
-  if (!bestTime || reactionTime < bestTime) {
-    bestTime = reactionTime;
-    bestDisplay.textContent = bestTime;
-  }
+    if (zone.dataset.zone === correctZone) {
+      score++;
+      result.textContent = "✅ Good read!";
+    } else {
+      result.textContent = "❌ Wrong direction!";
+      score = Math.max(0, score - 1);
+    }
 
-  showBox();
-};
+    scoreDisplay.textContent = score;
 
-showBox();
+    startTime = null;
+
+    setTimeout(newRound, 1000);
+  });
+});
+
+newRound();
