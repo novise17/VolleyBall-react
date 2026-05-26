@@ -3,19 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VolleyReact</title>
+  <title>VolleyReact v2</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
-  <h1>VolleyReact</h1>
-  <p id="info">Wait for the box... then CLICK FAST</p>
+  <h1>🏐 VolleyReact v2</h1>
+  <p id="prompt">Get ready...</p>
 
-  <div id="box"></div>
+  <div id="court">
+    <div class="zone" data-zone="left">LEFT</div>
+    <div class="zone" data-zone="middle">MIDDLE</div>
+    <div class="zone" data-zone="right">RIGHT</div>
+  </div>
+
+  <p id="result"></p>
 
   <div id="stats">
-    <p>Reaction Time: <span id="time">--</span> ms</p>
-    <p>Best: <span id="best">--</span> ms</p>
+    <p>Reaction: <span id="time">--</span> ms</p>
+    <p>Score: <span id="score">0</span></p>
   </div>
 
   <script src="script.js"></script>
