@@ -11,10 +11,12 @@ h1 {
 }
 
 #court {
+  position: relative;
   display: flex;
   justify-content: center;
   gap: 10px;
   margin-top: 50px;
+  height: 200px;
 }
 
 .zone {
@@ -37,6 +39,18 @@ h1 {
   background: limegreen;
   color: black;
   font-weight: bold;
+}
+
+#ball {
+  width: 20px;
+  height: 20px;
+  background: orange;
+  border-radius: 50%;
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
 }
 
 #result {
